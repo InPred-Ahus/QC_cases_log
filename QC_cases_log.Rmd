@@ -19,9 +19,6 @@ output:
 
 
 ```{r setup, include=FALSE}
-# library(glue)
-# library(broom)
-# library(klippy)
 
 knitr::opts_chunk$set(echo = TRUE)
 
