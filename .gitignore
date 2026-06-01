@@ -47,3 +47,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+
+.Rprofile
+*.Rproj
+fig/001_contamination.pdf
+renv/
+
