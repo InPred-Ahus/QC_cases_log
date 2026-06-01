@@ -1,0 +1,188 @@
+---
+title: "QC cases log"
+author: "Jaime Abraham Castro-Mondragon & Jean-Marc Costanzi"
+date: 'Last update: `r Sys.Date()`'
+output:
+  html_document:
+    number_sections: true
+    theme: cosmo
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: true
+    self_contained: true
+    code_folding: show
+  pdf_document:
+    toc: true
+    toc_depth: '4'
+---
+
+
+```{r setup, include=FALSE}
+# library(glue)
+# library(broom)
+# library(klippy)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+if (file.exists("InPreD_QC_cases_log.html")) {
+  file.remove("InPreD_QC_cases_log.html")
+}
+
+```
+
+
+```{r functions, include=FALSE}
+# ----------------------- #
+# Show/Hide figure botton #
+# ----------------------- #
+
+insert.fig.toggle <- function(
+  fig.id,        # Unique id for the div/button (e.g. "figVMWare")
+  button.label,  # Label for the button (e.g. "Toggle Figure 1")
+  img.src,       # Path to image (e.g. "fig/01_VMWare_login.png")
+  fig.width = "45%",  # Width style for image
+  fig.cap = "Caption text"  # Figure caption text
+) {
+  safe_fig_id <- gsub("'", "\\'", fig.id)
+  safe_button_label <- gsub("'", "\\'", button.label)
+  safe_img_src <- gsub("'", "\\'", img.src)
+  safe_fig_cap <- gsub("'", "\\'", fig.cap)
+  
+  cat(sprintf('
+<div style="margin-bottom: 10px; text-align: right;">
+  <button class="btn-toggle" onclick="toggleFigure(\'%s\')">%s</button>
+</div>
+<div id="%s" style="display:block; text-align: center; margin-bottom: 20px;">
+  <img src="%s" style="width:%s;" class="img-fluid"/>
+  <p><strong>%s.</strong> %s</p>
+</div>
+', safe_fig_id, safe_button_label, safe_fig_id, safe_img_src, fig.width, safe_button_label, safe_fig_cap))
+}
+
+```
+
+
+```{r toggle, echo=FALSE, results='asis'}
+
+cat('
+<style>
+.btn-toggle {
+  background-color: #0275d8;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 12px;       /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.btn-toggle:hover {
+  background-color: #025aa5;
+}
+</style>
+
+<script>
+function toggleFigure(id) {
+  var fig = document.getElementById(id);
+  if (fig.style.display === "none" || fig.style.display === "") {
+    fig.style.display = "block";
+  } else {
+    fig.style.display = "none";
+  }
+}
+</script>
+')
+```
+
+
+<br>
+
+## Introduction
+
+<br>
+
+This document shows a list of *special* cases that are recurrently observed
+during the process of DNA variants *QC*. 
+
+The document is divided in different categories:
+
+- Possible contamination
+- ...
+
+Each example contains a paragraph with the biological or technical explanation of the
+case and its solution (i.e., how to proceed in case we encounter one case of these
+during the QC process).
+
+This document will be regularly expanded as more special cases are detected during
+the DNA variants QC process.
+
+<br>
+
+## Concepts
+
+
+- **VAF**: Variant Allele Frequency. The proportion of sequencing reads that display a specific genetic variant compared to the total reads at that specific genomic location,
+
+<br>
+
+## Possible Contamination
+
+<br>
+
+*TSOPPI* estimates the level of contamination in each samples, a contamination score and
+its corresponding p-value are calculated. When a sample is above the predefined 
+thresholds, it is tagged as contamination (Figure 1).
+
+
+```{r figVMWare, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "Contamination",
+  button.label = "Figure 1",
+  img.src = "fig/001_contamination.png",
+  fig.width = "95%",
+  fig.cap = "Example of samples tagged as contaminated (TSOPPI output)"
+)
+
+```
+
+<br>
+
+<br>
+
+### Real Low Contamination
+
+<br>
+
+This is an example of real yet low degree contamination. The plot in **Figure 2**
+shows the *VAF* of variants within a sample (y-axis) along the genome (x-axis, chromosomes).
+
+The area highlighted in the red box shows that many variants in this samples have a
+*VAF* near of 0.1. In normal conditions, we expect to observe a few variants with
+this value, however when many variants have similar VAF along the whole genome 
+we can suspect a case of true contamination.
+
+<br>
+
+**Explanation**: it is likely that these variants with low VAF correspond to another
+sample, this is a clear signal of contamination.
+
+<br>
+
+**Solution**:  as in this case the contamination degree is low, we suggest to discard
+all the mutations in this sample with low VAF (< 0.2).
+
+
+```{r figVMs, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "Example_real_contamination",
+  button.label = "Figure 2",
+  img.src = "fig/002_real_contamination.png",
+  fig.width = "95%",
+  fig.cap = "Example of samples tagged as contaminated (TSOPPI output)"
+)
+
+```
