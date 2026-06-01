@@ -48,7 +48,7 @@ jobs:
 
     - name: Install renv and restore dependencies
       run: |
-        Rscript -e "install.packages(c('renv'))"
+        Rscript -e "install.packages(c('renv', 'rmarkdown'))"
         Rscript -e "renv::restore()"
 
     - name: Render Rmd file
