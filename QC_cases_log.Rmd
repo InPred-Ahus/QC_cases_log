@@ -119,8 +119,23 @@ the DNA variants QC process.
 
 ## Concepts
 
+- **CNV**: Copy Number Variant. A genomic event in which sections of the genome
+are repeated and the number of repeats in the genome varies between individuals.
+It is a type of structural variation (duplication or deletion event) that affects
+a considerable number of base pairs.
 
-- **VAF**: Variant Allele Frequency. The proportion of sequencing reads that display a specific genetic variant compared to the total reads at that specific genomic location,
+- **Coverage MAD CNV**: the median absolute deviation of normalized CNVs. Higher
+values indicate noisier sample data (poor quality). It helps ensure that genomic
+alterations (deletions or duplications) are actual biological findings rather than
+technical artifacts.
+
+- **LOH**: loss of heterozygosity. A genetic event that results in the loss of one
+of its two different alleles (variants) for a gene, leaving it with only a single
+allele across that chromosome region.
+
+- **VAF**: Variant Allele Frequency. The proportion of sequencing reads that display
+a specific genetic variant compared to the total reads at that specific genomic
+location.
 
 <br>
 
@@ -133,7 +148,7 @@ its corresponding p-value are calculated. When a sample is above the predefined
 thresholds, it is tagged as contamination (Figure 1).
 
 
-```{r figVMWare, echo=FALSE, results='asis'}
+```{r 001, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
   fig.id = "Contamination",
@@ -149,7 +164,7 @@ insert.fig.toggle(
 
 <br>
 
-### Real Low Contamination
+### PC1: Real Low Contamination
 
 <br>
 
@@ -168,11 +183,11 @@ sample, this is a clear signal of contamination.
 
 <br>
 
-**Solution**:  as in this case the contamination degree is low, we suggest to discard
+**Solution**: as in this case the contamination degree is low, we suggest to discard
 all the mutations in this sample with low VAF (< 0.2).
 
 
-```{r figVMs, echo=FALSE, results='asis'}
+```{r 002, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
   fig.id = "Example_real_contamination",
@@ -180,6 +195,75 @@ insert.fig.toggle(
   img.src = "fig/002_real_contamination.png",
   fig.width = "95%",
   fig.cap = "Example of samples tagged as contaminated (TSOPPI output)"
+)
+
+```
+
+<br>
+
+<br>
+
+### PC2: Predicted Contamination due to CNVs
+
+<br>
+
+In this example the sample was tagged as contaminated (Figure 3), but when we look
+at its corresponding VAF plot (Figure 4) we notice a different pattern compared
+to the one we observed in the case *PC1* (Figure 2). 
+
+We don't see a block of low-VAF variants along the genome (Figure 4; compare to
+case *PC1*). But we observe many regions along the genome with loss of heterozygosity,
+suggesting that this sample present multiple cases of chromosomal aberrations.
+
+The Coverage MAD of this sample (Figure 5) is higher than the suggested threshold,
+which suggest that many regions in the genome are amplified or deleted, more than
+it is usually expected, indicating a high degree of genomic aberration.
+
+<br>
+
+**Explanation**: the *contamination* tag in this sample is explained by the high
+CNV values (MAD coverage CNV), affecting the VAF of many variants.
+
+<br>
+
+**Solution**: we inform the interpreters that this *contaminated* sample is indeed,
+not a contamination event but a high degree of chromosome aberrations in the tagged
+sample.
+
+```{r 003, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "Contaminated_sample",
+  button.label = "Figure 3",
+  img.src = "fig/003_contamination_cnv_plot.png",
+  fig.width = "95%",
+  fig.cap = "Example of sample tagged as contaminated (TSOPPI output)"
+)
+
+```
+
+
+```{r 004, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "VAF_CNV_PC2",
+  button.label = "Figure 4",
+  img.src = "fig/004_VAF_plot_PC2.png",
+  fig.width = "95%",
+  fig.cap = "VAF plot of a sample labeled as contaminated."
+)
+
+```
+
+
+```{r 005, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "VAF_CNV_PC2",
+  button.label = "Figure 5",
+  img.src = "fig/005_MAD_coverage_PC2.png",
+  fig.width = "95%",
+  fig.cap = "MAD coverage CNV values for different samples, each bar correspond to a sample. The yellow star highlights the sample in the case PC2. The horizontal pink line marks the MAD CNV threshold (0.21)."
 )
 
 ```
