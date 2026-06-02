@@ -129,6 +129,10 @@ values indicate noisier sample data (poor quality). It helps ensure that genomic
 alterations (deletions or duplications) are actual biological findings rather than
 technical artifacts.
 
+- **GL_P**: germline proximity. Variant classification category in which the variant
+did not pass the VAF-based germline variant proximity filter, which looks for 5
+or more known germline variants with similar VAFs on the same chromosome.
+
 - **LOH**: loss of heterozygosity. A genetic event that results in the loss of one
 of its two different alleles (variants) for a gene, leaving it with only a single
 allele across that chromosome region.
@@ -264,6 +268,75 @@ insert.fig.toggle(
   img.src = "fig/005_MAD_coverage_PC2.png",
   fig.width = "95%",
   fig.cap = "MAD coverage CNV values for different samples, each bar correspond to a sample. The yellow star highlights the sample in the case PC2. The horizontal pink line marks the MAD CNV threshold (0.21)."
+)
+
+```
+
+<br>
+
+<br>
+
+## Include/Exclude variants
+
+<br>
+
+Every protein coding variant is manually inspected by the curators. *TSOPPI* considers
+different criteria (VAF, frequency, germline mutations, recurrent population variants,
+blacklisted regions) to categorize the variants as *include* or *exclude* categories.
+
+Although a variants is categorized as *exclude*, we have to double check in case
+it should be *include*d in the final report.
+
+In most of the cases it is easy to corroborate when a variant should be *include*d
+or *exclude*d, we recurrently found cases that are not easily categorized and require
+discussion and pay attention to many factors to agree in the final inclusion criteria.
+
+<br>
+
+### IE1: Corroborate exclusion of *GL_P*-tagged variants
+
+<br>
+
+In this case, a *RAD54L* variant (chromosome 1) was tagged as *exclude* in the
+*Class judgement* column and assigned to the class *GL_P* (germline proximity; Figure 6).
+
+The tag *GL_P* (germline proximity) is assigned when the VAF of this variant differs
+from the VAF of other nearby known germline variants. In this case, this variant
+is annotated as a *germline population variant* (Figure 6).
+
+We can see the VAF of the proximal variants in the VAF plot (Figure 7). Although proximal
+in the genome, their VAF differs.
+
+<br>
+
+**Explanation**: the *germline population* tag in this variant is a criterion to
+*exclude* this variant. We corroborate this decision through the VAF plot.
+
+<br>
+
+**Solution**: the variant remains *exclude*d. No need to modify anything.
+
+```{r 006, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "QC_table_IE1",
+  button.label = "Figure 6",
+  img.src = "fig/006_QC_table_IE1.jpeg",
+  fig.width = "95%",
+  fig.cap = "QC table with the details (VAF, frequency, sequency depth) associated to the RAD54L variant and tagged as *exclude* and *GL_P*."
+)
+
+```
+
+
+```{r 007, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "VAF_IE1",
+  button.label = "Figure 7",
+  img.src = "fig/007_VAF_IE1.jpeg",
+  fig.width = "95%",
+  fig.cap = "VAF plot for case IE1. The RAD54L variant tagged as GL_P is pointed with a red arrow (VAF = 0.36). Note the different VAF value in the nearby area in the chromosome 1 (blue box)."
 )
 
 ```
