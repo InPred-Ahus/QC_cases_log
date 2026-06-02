@@ -105,8 +105,9 @@ during the process of DNA variants *QC*.
 
 The document is divided in different categories:
 
-- Possible contamination
-- ...
+- PC: Possible contamination. Examples of how to deal when a sample is tagged as contaminated.
+- IE: Include/Exclude variants. Examples of how to adjust of verify the selection criterion of a variant. 
+- RV: examples of recurrent variant in InPreD samples, listed here to remember to exclude them in the QC process.
 
 Each example contains a paragraph with the biological or technical explanation of the
 case and its solution (i.e., how to proceed in case we encounter one case of these
@@ -143,7 +144,7 @@ location.
 
 <br>
 
-## Possible Contamination
+## PC: Possible Contamination
 
 <br>
 
@@ -276,7 +277,7 @@ insert.fig.toggle(
 
 <br>
 
-## Include/Exclude variants
+## IE: Include/Exclude variants
 
 <br>
 
@@ -345,7 +346,7 @@ insert.fig.toggle(
 
 <br>
 
-## Recurrent variants
+## RV: Recurrent variants
 
 <br>
 
