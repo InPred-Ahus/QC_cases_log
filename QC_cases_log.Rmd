@@ -340,3 +340,47 @@ insert.fig.toggle(
 )
 
 ```
+
+<br>
+
+<br>
+
+## Recurrent variants
+
+<br>
+
+For some reason there are many variants that are recurrently observed in the samples
+we curate and although frequent, they need to be excluded from the reports. In this
+section we list those common variants and the explanation of its exclusion.
+
+<br>
+
+### RV1: BARD1 (2:215632255; CA>TG)
+
+<br>
+
+This variant appears frequently in the samples, independently of the cancer
+type. It is likely an alignment artifact although it is also tagged as a
+*recurrent germline* (Figure 7).
+
+<br>
+
+**Explanation**: the *recurrent germline* tag in this variant is a criterion to
+*exclude* this variant. In addition, this is a common variant observed in many
+samples.
+
+<br>
+
+**Solution**: verify that this variant is *exclude*d.
+
+```{r 008, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "BARD2",
+  button.label = "Figure 8",
+  img.src = "fig/008_RV1.jpeg",
+  fig.width = "95%",
+  fig.cap = "BARD1 variant recurrently found in InPreD samples, it is tagged as a recurrent germline variant which is a criterion to exclude it."
+)
+
+```
