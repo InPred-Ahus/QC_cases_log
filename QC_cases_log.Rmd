@@ -107,7 +107,8 @@ The document is divided in different categories:
 
 - PC: Possible contamination. Examples of how to deal when a sample is tagged as contaminated.
 - IE: Include/Exclude variants. Examples of how to adjust of verify the selection criterion of a variant. 
-- RV: examples of recurrent variant in InPreD samples, listed here to remember to exclude them in the QC process.
+- RV: Examples of recurrent variant in InPreD samples, listed here to remember to exclude them in the QC process.
+- DC: Discordant cases. Examples when annotation and prediction data does not coincide. 
 
 Each example contains a paragraph with the biological or technical explanation of the
 case and its solution (i.e., how to proceed in case we encounter one case of these
@@ -385,3 +386,67 @@ insert.fig.toggle(
 )
 
 ```
+
+<br>
+
+<br>
+
+## DC: Discordant Cases
+
+<br>
+
+This section shows how to proceed when there results of annotated aand predicted
+fields are discordant in a samples (e.g., lower DNA/RNA concordance, predicted and
+inferred sex is different, etc).
+
+<br>
+
+### DC1: predicted sex differs in VCF and coverage
+
+<br>
+
+In this case we have data from a **male** patient, however the predicted sex in
+PureCN has two outcomes: **coverage predicts a male** and **VCF is annotated as a female sample**
+(Figure 9).
+
+```{r 009, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "sex_discord_cov_vcf",
+  button.label = "Figure 9",
+  img.src = "fig/009_sex_discordance_DC1.jpeg",
+  fig.width = "95%",
+  fig.cap = "In this sample the sex predicted by PureCN differs from the metadata. According to the coverage is a male, and in the VCF is annotated as a female."
+)
+
+```
+
+<br>
+
+We checked the VCF plot and verify that is a male patient (Figure 10), we see that
+all the germline variants have a *VAF = 1*, which is expected for males, since they
+have only 1 X chromosome (therefore no heterocigocity).
+
+```{r 010, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "male_VAF_X_chrom",
+  button.label = "Figure 10",
+  img.src = "fig/010_VAF_plot_DC1.jpeg",
+  fig.width = "95%",
+  fig.cap = "The VAF of germline variants in chromosme X is close to 1. Reflecting the homocigocity in this region because males only have one copy of X chromosome."
+)
+
+```
+
+<br>
+
+**Explanation**: we can verify from the coverage that this is indeed a male sample:
+VAF in chromosome X is almost 1, reflecting the expected homocigocity for a male
+individual in this genomic region. 
+
+<br>
+
+**Solution**: we report this warning to the interpreters, as it may be a source of
+confusion when doing the analysis, although is likely that this is an alignment-derived
+issue.
