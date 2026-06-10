@@ -484,6 +484,8 @@ score (0.5).
 confusion when doing the analysis, it is likely that there is a chromosome Y-loss
 in this sample, lowering the *sex score* and creating this warning message.
 
+<br>
+
 **Sample**: *IPA0666*
 
 <br>
@@ -495,6 +497,7 @@ in this sample, lowering the *sex score* and creating this warning message.
 <br>
 
 In this case the DNA/RNA conconcordance = 0.77, quite close to the suggested threshold (>= 0.8). 
+
 ```{r 012, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -507,11 +510,19 @@ insert.fig.toggle(
 
 ```
 
-This could be due to multiple reasons such as chromosome aberation or low quality of RNA sample.
+<br>
+
+This could be due to multiple reasons such as chromosome aberration or low quality
+of RNA sample.
+
+<br>
 
 When this happens we have to verify different results:
-- MAD coverage value (TSO500_run_metrics.pdf)
-The MAD coverage in above the threshold (0.21) in this sample, which suggest that many regions in the genome are amplified or deleted, more than it is usually expected, indicating a high degree of genomic aberration (Figure 13).
+
+- **MAD coverage value** (TSO500_run_metrics.pdf): The *MAD CNV coverage* is above
+the threshold (0.21) in this sample. This suggests that many regions in the genome
+are amplified or deleted, more than what it is usually expected, suggesting a high degree of genomic aberration (Figure 13).
+
 ```{r 013, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -519,13 +530,21 @@ insert.fig.toggle(
   button.label = "Figure 13",
   img.src = "fig/013_MAD_coverage_DC2.png",
   fig.width = "75%",
-  fig.cap = "Here the *MAD coverage* was found to be above threshold which show that some regions have lower or higher copy number variant than expected. This could be explaied by chromosome aberrations."
+  fig.cap = "Here the *MAD CNV coverage* was found to be above threshold which show that some regions have lower or higher CNV than expected. This could be explained by chromosome aberrations."
 )
 
 ```
 
-- VAF plot (CNV_overview_plot.pdf)
-The VAF plot show a lost of heterozygosity in many chromosomes (1, 2, 3, 6, 9, 10, 13, 17 and 18). If one copy of the chromosome is lost, the VAF of variants in this region will be close to 1 or 0 (instead of 0.5). However because in the VAF we have a mix of normal and tumor sample then the VAF will never be 0 or 1 but a slightly lower than 1 or higher than 0. This is why we observe in the chomosome with loss of heterozygosity a VAF close to 0.8 or 0.2 instead of 0.5 (Figure 14).
+<br>
+
+- **VAF plot** (CNV_overview_plot.pdf): The VAF plot show a lost of heterozygosity
+in many chromosomes (1, 2, 3, 6, 9, 10, 13, 17 and 18). If one copy of the chromosome
+is lost, the VAF of variants in this region will be close to 1 or 0 (instead of 0.5).
+However because the sample is a mix of normal and tumor sample then the VAF will
+never be 0 or 1 but a slightly lower than 1 or higher than 0. This is why we observe
+in the chromosome with loss of heterozygosity a VAF close to 0.8 or 0.2 instead
+of 0.5 (Figure 14).
+
 ```{r 014, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -533,13 +552,16 @@ insert.fig.toggle(
   button.label = "Figure 14",
   img.src = "fig/014_VAF_plot_DC2.png",
   fig.width = "75%",
-  fig.cap = "The VAF plots shows a loss of heterozygosity in some chromosomes (e.g.: 1, 2, 3, 6, 9, 10, 13, 17, 18). "
+  fig.cap = "The VAF plots shows a mild loss of heterozygosity in some chromosomes (e.g.: 1, 2, 3, 6, 9, 10, 13, 17, 18). "
 )
 
 ```
 
-- CNV plot (CNV_overview_plot.pdf)
-The CNV plot shows the loss of variant copies in some chromosomes and the gain of copies in other chromosomes (Figure 15). 
+<br>
+
+- **CNV plot** (CNV_overview_plot.pdf): The CNV plot shows the loss of copies
+in some chromosomes and gain of copies in other chromosomes (Figure 15).
+
 ```{r 015, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -552,12 +574,22 @@ insert.fig.toggle(
 
 ```
 
-To verify the quality of the RNA sample we need to compare the coverage range of the RNA aligments and RNA mark duplicates BAM files in IGV.
+<br>
+
+To verify the quality of the RNA sample we need to compare the coverage range of
+the RNA alignments and RNA mark duplicates BAM files in IGV.
+
 To do so start IGV without initializing a session and in IGV, go to **File → Load from file**, then navigate to: 
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaAlignment/${sample_id}/${sample_id}.bam`
+
 Also load:
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaMarkDuplicates/${sample_id}/${sample_id}.bam`
-In Figure 16 we can see a large difference in coverage range between these two tracks RnaAlignment and RnaMarkDuplicates. This indicate a large amount of duplicates which may indicate a low quality of the RNA sample. This could explain the low DNA/RNA concordance in this sample.
+
+In Figure 16 we can see a large difference in coverage range between these two tracks
+*RnaAlignment* and *RnAMarkDuplicates*. This large difference indicate a large amount
+of duplicates which may indicate a low quality of the RNA sample. This could explain
+the low DNA/RNA concordance in this sample.
+
 ```{r 016, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -579,5 +611,7 @@ insert.fig.toggle(
 
 **Solution**: we report this warning to the interpreters, as it may be a source of
 confusion when doing the analysis. The concordance is close to the threshold so the data is still usable.
+
+<br>
 
 **Sample**: *IPA0660*
