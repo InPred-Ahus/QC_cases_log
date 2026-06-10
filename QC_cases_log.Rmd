@@ -131,6 +131,8 @@ values indicate noisier sample data (poor quality). It helps ensure that genomic
 alterations (deletions or duplications) are actual biological findings rather than
 technical artifacts.
 
+- **DNA/RNA conconcordance**: a score that measures how closely genetic alterations found in DNA (the genome) align with the corresponding RNA transcripts (the transcriptome). A high concordance score (close to 1) indicates that the DNA variants are well represented in the RNA, suggesting that they are likely to be biologically relevant and not artifacts.
+
 - **GL_P**: germline proximity. Variant classification category in which the variant
 did not pass the VAF-based germline variant proximity filter, which looks for 5
 or more known germline variants with similar VAFs on the same chromosome.
@@ -192,6 +194,8 @@ sample, this is a clear signal of contamination.
 **Solution**: as in this case the contamination degree is low, we suggest to discard
 all the mutations in this sample with low VAF (< 0.2).
 
+**Sample**: *IPA0562*
+
 
 ```{r 002, echo=FALSE, results='asis'}
 
@@ -235,6 +239,8 @@ CNV values (MAD coverage CNV), affecting the VAF of many variants.
 **Solution**: we inform the interpreters that this *contaminated* sample is indeed,
 not a contamination event but a high degree of chromosome aberrations in the tagged
 sample.
+
+**Sample**: *IPA0664*
 
 ```{r 003, echo=FALSE, results='asis'}
 
@@ -318,6 +324,8 @@ in the genome, their VAF differs.
 
 **Solution**: the variant remains *exclude*d. No need to modify anything.
 
+**Sample**: *IPA0662*
+
 ```{r 006, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -375,6 +383,8 @@ samples.
 
 **Solution**: verify that this variant is *exclude*d.
 
+**Sample**: *IPA0657*
+
 ```{r 008, echo=FALSE, results='asis'}
 
 insert.fig.toggle(
@@ -423,9 +433,13 @@ insert.fig.toggle(
 
 <br>
 
-We checked the VCF plot and verify that is a male patient (Figure 10), we see that
-all the germline variants have a *VAF = 1*, which is expected for males, since they
+We checked the VCF plot and verify that is indeed a male patient (Figure 10), we
+see that all the germline variants have a *VAF = 1*, which is expected for males, since they
 have only 1 X chromosome (therefore no heterocigocity).
+
+Note that only *1-22* and *X* chromosomes are displayed in the plots. However chromosome
+*Y* sequencing reads are available in the *BAM* files.
+
 
 ```{r 010, echo=FALSE, results='asis'}
 
@@ -441,12 +455,117 @@ insert.fig.toggle(
 
 <br>
 
+We must also check the *VCF* result. PureCN calculates a *sex score* (0 for females and
+0.5 for males). This score can differ (as in this case; Figure 11) when there is a chromosome Y
+loss, commonly observed in many tumors.
+
+```{r 011, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "PureCN_sex_score",
+  button.label = "Figure 11",
+  img.src = "fig/011_sex_score_DC1.png",
+  fig.width = "75%",
+  fig.cap = "Example of *sex score* calculated by PureCN. File: ${sample_id}_merged_CNV_data.tsv within a TSOPPI RUN_ID folder."
+)
+
+```
+
+<br>
+
 **Explanation**: we can verify from the coverage that this is indeed a male sample:
 VAF in chromosome X is almost 1, reflecting the expected homocigocity for a male
-individual in this genomic region. 
+individual in this genomic region. The *sex score* (0.3) is closer to the male
+score (0.5).
 
 <br>
 
 **Solution**: we report this warning to the interpreters, as it may be a source of
-confusion when doing the analysis, although is likely that this is an alignment-derived
-issue.
+confusion when doing the analysis, it is likely that there is a chromosome Y-loss
+in this sample, lowering the *sex score* and creating this warning message.
+
+**Sample**: *IPA0666*
+
+<br>
+
+<br>
+
+### DC2: DNA/RNA concordance below the 0.8 threshold
+
+<br>
+
+In this case the DNA/RNA conconcordance = 0.77, quite close to the suggested threshold (>= 0.8). 
+
+When this happens we have to verify two results:
+
+- MAD coverage value 
+- VAF plot
+
+
+
+```{r 009, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "sex_discord_cov_vcf",
+  button.label = "Figure 9",
+  img.src = "fig/009_sex_discordance_DC1.jpeg",
+  fig.width = "95%",
+  fig.cap = "In this sample the sex predicted by PureCN differs from the metadata. According to the coverage is a male, and in the VCF is annotated as a female."
+)
+
+```
+
+<br>
+
+We checked the VCF plot and verify that is indeed a male patient (Figure 10), we
+see that all the germline variants have a *VAF = 1*, which is expected for males, since they
+have only 1 X chromosome (therefore no heterocigocity).
+
+Note that only *1-22* and *X* chromosomes are displayed in the plots. However chromosome
+*Y* sequencing reads are available in the *BAM* files.
+
+
+```{r 010, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "male_VAF_X_chrom",
+  button.label = "Figure 10",
+  img.src = "fig/010_VAF_plot_DC1.jpeg",
+  fig.width = "95%",
+  fig.cap = "The VAF of germline variants in chromosme X is close to 1. Reflecting the homocigocity in this region because males only have one copy of X chromosome."
+)
+
+```
+
+<br>
+
+We must also check the *VCF* result. PureCN calculates a *sex score* (0 for females and
+0.5 for males). This score can differ (as in this case; Figure 11) when there is a chromosome Y
+loss, commonly observed in many tumors.
+
+```{r 011, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "PureCN_sex_score",
+  button.label = "Figure 11",
+  img.src = "fig/011_sex_score_DC1.png",
+  fig.width = "75%",
+  fig.cap = "Example of *sex score* calculated by PureCN. File: ${sample_id}_merged_CNV_data.tsv within a TSOPPI RUN_ID folder."
+)
+
+```
+
+<br>
+
+**Explanation**: we can verify from the coverage that this is indeed a male sample:
+VAF in chromosome X is almost 1, reflecting the expected homocigocity for a male
+individual in this genomic region. The *sex score* (0.3) is closer to the male
+score (0.5).
+
+<br>
+
+**Solution**: we report this warning to the interpreters, as it may be a source of
+confusion when doing the analysis, it is likely that there is a chromosome Y-loss
+in this sample, lowering the *sex score* and creating this warning message.
+
+**Sample**: *IPA0666*
