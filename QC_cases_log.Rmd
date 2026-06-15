@@ -353,6 +353,39 @@ insert.fig.toggle(
 
 <br>
 
+### IE2: Two varians next to each other included
+
+<br>
+
+In this case we have two variants in the same exon and very close to each other (Figure 8). Both variants are included in the variant list, however most of the time when two variants are very close to each other, this is likely an artifact from the the variant caller or during the aligment and only one variant should be kept. The recomendation is to keep the variant that makes the most sense.
+Here we have one variant that is a large deletion of 18 base pair while the other is a mutation right after the delection. This is probably one variant detected as two different variants. We kept here the large deletion and excluded the other variant. When excluding the second variant we wrote a comment in the *Class judgement* column to explain the reason of this decision.
+
+```{r 017, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "two_variants_closeby",
+  button.label = "Figure 8",
+  img.src = "fig/017_two_variants_closeby.png",
+  fig.width = "95%",
+  fig.cap = "In the variant list we can see the two variants on the same exon and coordinate show that they are close to each other."
+)
+
+```
+
+
+```{r 018, echo=FALSE, results='asis'}
+
+insert.fig.toggle(
+  fig.id = "VAF_two_variants_closeby_IGV",
+  button.label = "Figure 9",
+  img.src = "fig/018_two_variants_closeby_IGV.png",
+  fig.width = "95%",
+  fig.cap = "On IGV we can actually see that they are the same variant detected as two different variants."
+)
+```
+
+<br>
+
 <br>
 
 ## RV: Recurrent variants
