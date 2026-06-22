@@ -425,6 +425,67 @@ accounted in the large deletion.
 
 <br>
 
+### IE3: Same mutational event annotated as separated variants
+
+<br>
+
+In this case we have again two *SETD2* variants in the same exon and very close
+to each other. Both variants are included in the variant list (Figure 10). As we
+discussed in *IE2*, this may be an artifact from the the variant caller or during
+the alignment and only one variant should be kept. However in this case the biology
+suggest something different.
+
+Here we have one single nucleotide variant and a few nucleotides upstream we have
+a 4 nucleotide insertion. Note that both variants do not overlap (Figure 11) and
+all reads in that area hace both the SNV and the insertion, therefore are co-ocurring
+events.
+
+```{r 019, echo=FALSE, results='asis'}
+fig.nb <- fig.nb + 1
+
+insert.fig.toggle(
+  fig.id = "two_variants_closeby_nointersection",
+  button.label = paste0("Figure ", fig.nb),
+  img.src = "fig/019_two_nonverlap_variants_IE3.png",
+  fig.width = "80%",
+  fig.cap = "Two *SETD2* variants (a SNV and an insertion), non overlapping and separated by a few nucleotides."
+)
+
+```
+
+<br>
+
+```{r 020, echo=FALSE, results='asis'}
+fig.nb <- fig.nb + 1
+
+insert.fig.toggle(
+  fig.id = "two_variants_closeby_nointersection_IGV",
+  button.label = paste0("Figure ", fig.nb),
+  img.src = "fig/020_two_nonoverlapping_variants_IGV_IE3.png",
+  fig.width = "55%",
+  fig.cap = "We can see that each read has both the SNV and the insertion, we explain this as a same mutational event but annotated separately."
+)
+```
+
+<br>
+
+**Explanation**: as the SNV and the insertion are co-occurring in the same reads,
+it means they are part of the same mutation event. However, the variant annotation
+software consider them as a separate them events. Conclusion: one mutational event
+annotated as two (non-overlapping) variants.
+
+<br>
+
+**Solution**: as the variants are non overlapping, we consider them as independent
+entries in the mutation table. Both variants are *include*d but we write a note in
+both entries.
+  
+<br>
+
+**Sample**: *IPA0675*
+
+<br>
+
 <br>
 
 ## RV: Recurrent variants
@@ -443,7 +504,7 @@ section we list those common variants and the explanation of its exclusion.
 
 This variant appears frequently in the samples, independently of the cancer
 type. It is likely an alignment artifact although it is also tagged as a
-*recurrent germline* (Figure 10).
+*recurrent germline* (Figure 12).
 
 <br>
 
@@ -490,7 +551,7 @@ inferred sex is different, etc).
 
 In this case we have data from a **male** patient, however the predicted sex in
 PureCN has two outcomes: **coverage predicts a male** and **VCF is annotated as a female sample**
-(Figure 11).
+(Figure 13).
 
 ```{r 009, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -507,7 +568,7 @@ insert.fig.toggle(
 
 <br>
 
-We checked the VCF plot and verify that is indeed a male patient (Figure 11), we
+We checked the VCF plot and verify that is indeed a male patient (Figure 13), we
 see that all the germline variants have a *VAF = 1*, which is expected for males, since they
 have only 1 X chromosome (therefore no heterocigocity).
 
@@ -531,7 +592,7 @@ insert.fig.toggle(
 <br>
 
 We must also check the *VCF* result. PureCN calculates a *sex score* (0 for females and
-0.5 for males). This score can differ (as in this case; Figure 12) when there is a chromosome Y
+0.5 for males). This score can differ (as in this case; Figure 14) when there is a chromosome Y
 loss, commonly observed in many tumors.
 
 ```{r 011, echo=FALSE, results='asis'}
@@ -573,7 +634,7 @@ in this sample, lowering the *sex score* and creating this warning message.
 <br>
 
 In this case the DNA/RNA conconcordance = 0.77, quite close to the suggested threshold
-(>= 0.8), Figure 13. 
+(>= 0.8), Figure 15. 
 
 ```{r 012, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -600,7 +661,7 @@ When this happens we have to verify different results:
 - **MAD coverage value** (TSO500_run_metrics.pdf): The *MAD CNV coverage* is above
 the threshold (0.21) in this sample. This suggests that many regions in the genome
 are amplified or deleted, more than what it is usually expected, suggesting a high
-degree of genomic aberration (Figure 14).
+degree of genomic aberration (Figure 16).
 
 ```{r 013, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -623,7 +684,7 @@ is lost, the VAF of variants in this region will be close to 1 or 0 (instead of 
 However because the sample is a mix of normal and tumor sample then the VAF will
 never be 0 or 1 but a slightly lower than 1 or higher than 0. This is why we observe
 in the chromosome with loss of heterozygosity a VAF close to 0.8 or 0.2 instead
-of 0.5 (Figure 15).
+of 0.5 (Figure 17).
 
 ```{r 014, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -640,7 +701,7 @@ insert.fig.toggle(
 <br>
 
 - **CNV plot** (CNV_overview_plot.pdf): The CNV plot shows the loss of copies
-in some chromosomes and gain of copies in other chromosomes (Figure 16).
+in some chromosomes and gain of copies in other chromosomes (Figure 18).
 
 ```{r 015, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -666,10 +727,12 @@ To do so start IGV without initializing a session and in IGV, go to **File → L
 Also load:
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaMarkDuplicates/${sample_id}/${sample_id}.bam`
 
-In Figure 17 we can see a large difference in coverage range between these two tracks
+In Figure 19 we can see a large difference in coverage range between these two tracks
 *RnaAlignment* and *RnAMarkDuplicates*. This large difference indicate a large amount
 of duplicates which may indicate a low quality of the RNA sample. This could explain
 the low DNA/RNA concordance in this sample.
+
+<br>
 
 ```{r 016, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -691,8 +754,9 @@ insert.fig.toggle(
 
 <br>
 
-**Solution**: we report this warning to the interpreters, as it may be a source of
-confusion when doing the analysis. The concordance is close to the threshold so the data is still usable.
+**Solution**: we report this warning to the interpreters, as it may be a source
+of confusion when doing the analysis. The concordance is close to the threshold
+so the data is still usable.
 
 <br>
 
