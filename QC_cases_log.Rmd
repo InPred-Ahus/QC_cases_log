@@ -488,6 +488,82 @@ both entries.
 
 <br>
 
+### IE4: Variant not detected in RNA reads
+
+<br>
+
+In this case, we found a variant in the DNA reads but it is not observed in any
+of the RNA reads.
+
+This situation may occur frequently and there are many biological and technical
+explanations.
+
+<br>
+
+Biology:
+
+- Not all variants are expressed.
+- The variant may be an early *Non-sense* variant that creates an unstable transcript that we never see in the sequencing.
+
+<br>
+
+Technical:
+
+- The RNA quality is low: the number of duplicated reads in that locus is high.
+- It may be a combination of low tumor content and low VAF.
+
+<br>
+
+In this particular example, the variant has a low VAF (0.094) and the tumor content
+is 40% (Figure 12). We observed that the variant *A>T* is observed in DNA reads,
+but in none of the RNA reads (Figure 13).
+
+
+
+```{r 021, echo=FALSE, results='asis'}
+fig.nb <- fig.nb + 1
+
+insert.fig.toggle(
+  fig.id = "Variant_not_seen_RNA",
+  button.label = paste0("Figure ", fig.nb),
+  img.src = "fig/021_Variant_IE4.png",
+  fig.width = "100%",
+  fig.cap = "VAF and tumor content for a variant observed in DNA reads but not in RNA reads."
+)
+
+```
+
+<br>
+
+```{r 022, echo=FALSE, results='asis'}
+fig.nb <- fig.nb + 1
+
+insert.fig.toggle(
+  fig.id = "Variant_in_DNA_reads_nut_not_RNA_reads",
+  button.label = paste0("Figure ", fig.nb),
+  img.src = "fig/022_DNA_RNA_reads_IE4.png",
+  fig.width = "35%",
+  fig.cap = "The DNA reads (upper panel) contain the *A>T* variant, however we do not observe any read with this variant in the RNA reads (lowe panel)."
+)
+```
+
+<br>
+
+**Explanation**: it may be a biology or technical issue (see explanation above),
+this is a common situation, no need to worry about it.
+
+<br>
+
+**Solution**:  the variant in *include*d.
+  
+<br>
+
+**Sample**: *IPA0683*
+
+<br>
+
+<br>
+
 ## RV: Recurrent variants
 
 <br>
@@ -504,7 +580,7 @@ section we list those common variants and the explanation of its exclusion.
 
 This variant appears frequently in the samples, independently of the cancer
 type. It is likely an alignment artifact although it is also tagged as a
-*recurrent germline* (Figure 12).
+*recurrent germline* (Figure 14).
 
 <br>
 
@@ -551,7 +627,7 @@ inferred sex is different, etc).
 
 In this case we have data from a **male** patient, however the predicted sex in
 PureCN has two outcomes: **coverage predicts a male** and **VCF is annotated as a female sample**
-(Figure 13).
+(Figure 15).
 
 ```{r 009, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -568,7 +644,7 @@ insert.fig.toggle(
 
 <br>
 
-We checked the VCF plot and verify that is indeed a male patient (Figure 13), we
+We checked the VCF plot and verify that is indeed a male patient (Figure 15), we
 see that all the germline variants have a *VAF = 1*, which is expected for males, since they
 have only 1 X chromosome (therefore no heterocigocity).
 
@@ -592,7 +668,7 @@ insert.fig.toggle(
 <br>
 
 We must also check the *VCF* result. PureCN calculates a *sex score* (0 for females and
-0.5 for males). This score can differ (as in this case; Figure 14) when there is a chromosome Y
+0.5 for males). This score can differ (as in this case; Figure 16) when there is a chromosome Y
 loss, commonly observed in many tumors.
 
 ```{r 011, echo=FALSE, results='asis'}
@@ -634,7 +710,7 @@ in this sample, lowering the *sex score* and creating this warning message.
 <br>
 
 In this case the DNA/RNA conconcordance = 0.77, quite close to the suggested threshold
-(>= 0.8), Figure 15. 
+(>= 0.8), Figure 17. 
 
 ```{r 012, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -661,7 +737,7 @@ When this happens we have to verify different results:
 - **MAD coverage value** (TSO500_run_metrics.pdf): The *MAD CNV coverage* is above
 the threshold (0.21) in this sample. This suggests that many regions in the genome
 are amplified or deleted, more than what it is usually expected, suggesting a high
-degree of genomic aberration (Figure 16).
+degree of genomic aberration (Figure 18).
 
 ```{r 013, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -684,7 +760,7 @@ is lost, the VAF of variants in this region will be close to 1 or 0 (instead of 
 However because the sample is a mix of normal and tumor sample then the VAF will
 never be 0 or 1 but a slightly lower than 1 or higher than 0. This is why we observe
 in the chromosome with loss of heterozygosity a VAF close to 0.8 or 0.2 instead
-of 0.5 (Figure 17).
+of 0.5 (Figure 19).
 
 ```{r 014, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -701,7 +777,7 @@ insert.fig.toggle(
 <br>
 
 - **CNV plot** (CNV_overview_plot.pdf): The CNV plot shows the loss of copies
-in some chromosomes and gain of copies in other chromosomes (Figure 18).
+in some chromosomes and gain of copies in other chromosomes (Figure 20).
 
 ```{r 015, echo=FALSE, results='asis'}
 fig.nb <- fig.nb + 1
@@ -727,7 +803,7 @@ To do so start IGV without initializing a session and in IGV, go to **File → L
 Also load:
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaMarkDuplicates/${sample_id}/${sample_id}.bam`
 
-In Figure 19 we can see a large difference in coverage range between these two tracks
+In Figure 21 we can see a large difference in coverage range between these two tracks
 *RnaAlignment* and *RnAMarkDuplicates*. This large difference indicate a large amount
 of duplicates which may indicate a low quality of the RNA sample. This could explain
 the low DNA/RNA concordance in this sample.
