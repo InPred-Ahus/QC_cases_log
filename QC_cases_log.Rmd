@@ -615,7 +615,7 @@ insert.fig.toggle(
 
 <br>
 
-This section shows how to proceed when there results of annotated aand predicted
+This section shows how to proceed when the results of annotated and predicted
 fields are discordant in a samples (e.g., lower DNA/RNA concordance, predicted and
 inferred sex is different, etc).
 
@@ -837,3 +837,67 @@ so the data is still usable.
 <br>
 
 **Sample**: *IPA0660*
+
+<br>
+
+<br>
+
+## CV: Change Variant Cases
+
+<br>
+
+This section shows how to proceed when a predicted variants is incorrect, probably
+due to an alignment issue, but another proximal variant, originally included in
+the predicted variant, makes more sense to be reported.
+
+<br>
+
+### CV1: predicted sex differs in VCF and coverage
+
+<br>
+
+In this case we have a reported 3 nucleotide insertion, however we see in the alignment
+that the 3rd position is a SNV *T>C*, and it is not reported by the predictor (Figure 23).
+
+Looking at the insertion sequence, we noticed that it is flanked by two *AGC* sequences,
+if we consider the SNV in the third position, we observe 3 *ACG* repeats. The *VAF*
+of the *T>C* is 1, that means, all reads contain this SNV, therefore it seems that
+the aligner is confused and assign that as a deletion.
+
+However, the *T>C* is not in the list of reported variants.
+
+```{r 023, echo=FALSE, results='asis'}
+fig.nb <- fig.nb + 1
+
+insert.fig.toggle(
+  fig.id = "insert_alignment_CV1",
+  button.label = paste0("Figure ", fig.nb),
+  img.src = "fig/023_Alignment_CV1.png",
+  fig.width = "95%",
+  fig.cap = "*TSOPPI* reports a 3 nucleotides insertion in a few reads, in the third position of this insertion there is a C>T variant in all reads. Note the *AGC* flanks around the insertion, if we consider that the C>T variant is present in all the reads, then we have 3 contiguous *ACG* repeats. We suspect this created uncertainty in the aligner."
+)
+
+```
+
+**Explanation**: if we consider that the *C>T* variant has a VAF = 1, then we have
+three contiguous *AGC* repeats, the aligner prioritize in this variant and ignored
+the *C>T* variant because it was present in all reads, and the insertion occurs at
+the end of the reads. The reads had 2 *ACG* but the aligner consider that there
+must 3 three, then it reports an insertion.
+
+<br>
+
+<br>
+
+**Solution**: instead of reporting the 3 nucleotide insertion, we must report the
+*C>T* variant, we change the *${sample_ID}_small_variant_table_forQC.tsv* file.
+Notice that we must update the genomic coordinates, variant type, VAF and number
+of reads.
+
+<br>
+
+**Sample**: *IPA0728*
+
+<br>
+
+<br>
