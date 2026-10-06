@@ -26,7 +26,47 @@ if (file.exists("InPreD_QC_cases_log.html")) {
   file.remove("InPreD_QC_cases_log.html")
 }
 
-fig.nb <- 0
+# Figure registry: list all figure IDs in document order.
+# To add a new figure: insert its ID at the correct position here, then write the chunk.
+# Never change an existing ID — it will break all text references using fig_ref().
+fig_ids <- c(
+  "Contamination",                          # PC : Figure 1
+  "Example_real_contamination",             # PC1: Figure 2
+  "Contaminated_sample",                    # PC2: Figure 3
+  "VAF_plot_PC2",                           # PC2: Figure 4
+  "MAD_coverage_PC2",                       # PC2: Figure 5
+  "Contamination_plot_PC3",                 # PC3: Figure 6"
+  "VAF_plot_PC3",                           # PC3: Figure 7
+  "QC_table_IE1",                           # IE1: Figure 8
+  "VAF_IE1",                                # IE1: Figure 9
+  "two_variants_closeby",                   # IE2: Figure 10
+  "VAF_two_variants_closeby_IGV",           # IE2: Figure 11
+  "two_variants_closeby_nointersection",    # IE3: Figure 12
+  "two_variants_closeby_nointersection_IGV",# IE3: Figure 13
+  "Variant_not_seen_RNA",                   # IE4: Figure 14
+  "Variant_in_DNA_reads_nut_not_RNA_reads", # IE4: Figure 15
+  "BARD2",                                  # RV1: Figure 16
+  "sex_discord_cov_vcf",                    # DC1: Figure 17
+  "male_VAF_X_chrom",                       # DC1: Figure 18
+  "PureCN_sex_score",                       # DC1: Figure 19
+  "DNA_RNA_concordance",                    # DC2: Figure 20
+  "MAD_coverage_DC2",                       # DC2: Figure 21
+  "VAF_plot_DC2",                           # DC2: Figure 22
+  "CNV_plot_DC2",                           # DC2: Figure 23
+  "IGV_RNA_tracks_DC2",                     # DC2: Figure 24
+  "insert_alignment_CV1"                    # CV1: Figure 25
+)
+
+# Returns the figure number for a given ID.
+# Throws an informative error if the ID is not found in fig_ids.
+fig_ref <- function(id) {
+  idx <- which(fig_ids == id)
+  if (length(idx) == 0) {
+    stop(paste0("Unknown figure id: '", id, "'. Add it to fig_ids in the setup chunk."))
+  }
+  idx
+}
+
 
 ```
 
@@ -155,15 +195,13 @@ location.
 
 *TSOPPI* estimates the level of contamination in each samples, a contamination score and
 its corresponding p-value are calculated. When a sample is above the predefined 
-thresholds, it is tagged as contamination (Figure 1).
+thresholds, it is tagged as contamination (Figure `r fig_ref("Contamination")`).
 
 
 ```{r 001, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "Contamination",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("Contamination")),
   img.src = "fig/001_contamination.png",
   fig.width = "95%",
   fig.cap = "Example of samples tagged as contaminated (TSOPPI output)"
@@ -179,7 +217,7 @@ insert.fig.toggle(
 
 <br>
 
-This is an example of real yet low degree contamination. The plot in **Figure 2**
+This is an example of real yet low degree contamination. The plot in **Figure `r fig_ref("Example_real_contamination")`**
 shows the *VAF* of variants within a sample (y-axis) along the genome (x-axis, chromosomes).
 
 The area highlighted in the red box shows that many variants in this samples have a
@@ -197,15 +235,13 @@ sample, this is a clear signal of contamination.
 **Solution**: as in this case the contamination degree is low, we suggest to discard
 all the mutations in this sample with low VAF (< 0.2).
 
-**Sample**: *IPA0562*
+**Sample**: *IPA0652*
 
 
 ```{r 002, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "Example_real_contamination",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("Example_real_contamination")),
   img.src = "fig/002_real_contamination.png",
   fig.width = "95%",
   fig.cap = "Example of samples tagged as contaminated (TSOPPI output)"
@@ -221,15 +257,15 @@ insert.fig.toggle(
 
 <br>
 
-In this example the sample was tagged as contaminated (Figure 3), but when we look
-at its corresponding VAF plot (Figure 4) we notice a different pattern compared
-to the one we observed in the case *PC1* (Figure 2). 
+In this example the sample was tagged as contaminated (Figure `r fig_ref("Contaminated_sample")`), but when we look
+at its corresponding VAF plot (Figure `r fig_ref("VAF_plot_PC2")`) we notice a different pattern compared
+to the one we observed in the case *PC1* (Figure `r fig_ref("Example_real_contamination")`). 
 
-We don't see a block of low-VAF variants along the genome (Figure 4; compare to
+We don't see a block of low-VAF variants along the genome (Figure `r fig_ref("VAF_plot_PC2")`; compare to
 case *PC1*). But we observe many regions along the genome with loss of heterozygosity,
 suggesting that this sample present multiple cases of chromosomal aberrations.
 
-The Coverage MAD of this sample (Figure 5) is higher than the suggested threshold,
+The Coverage MAD of this sample (Figure `r fig_ref("MAD_coverage_PC2")`) is higher than the suggested threshold,
 which suggest that many regions in the genome are amplified or deleted, more than
 it is usually expected, indicating a high degree of genomic aberration.
 
@@ -247,11 +283,9 @@ sample.
 **Sample**: *IPA0664*
 
 ```{r 003, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "Contaminated_sample",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("Contaminated_sample")),
   img.src = "fig/003_contamination_cnv_plot.png",
   fig.width = "95%",
   fig.cap = "Example of sample tagged as contaminated (TSOPPI output)"
@@ -261,11 +295,9 @@ insert.fig.toggle(
 
 
 ```{r 004, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
-  fig.id = "VAF_CNV_PC2",
-  button.label = paste0("Figure ", fig.nb),
+  fig.id = "VAF_plot_PC2",
+  button.label = paste0("Figure ", fig_ref("VAF_plot_PC2")),
   img.src = "fig/004_VAF_plot_PC2.png",
   fig.width = "95%",
   fig.cap = "VAF plot of a sample labeled as contaminated."
@@ -275,14 +307,60 @@ insert.fig.toggle(
 
 
 ```{r 005, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
-  fig.id = "VAF_CNV_PC2",
-  button.label = paste0("Figure ", fig.nb),
+  fig.id = "MAD_coverage_PC2",
+  button.label = paste0("Figure ", fig_ref("MAD_coverage_PC2")),
   img.src = "fig/005_MAD_coverage_PC2.png",
   fig.width = "95%",
   fig.cap = "MAD coverage CNV values for different samples, each bar correspond to a sample. The yellow star highlights the sample in the case PC2. The horizontal pink line marks the MAD CNV threshold (0.21)."
+)
+
+```
+
+<br>
+
+<br>
+
+### PC3: High LOH but flagged as Contamination
+
+<br>
+
+In this case a sample was tagged as contaminated but after a careful look in the *VAF*
+plot we observe a high *LOH* in many regions that could explain why this sample
+was tagged as contaminated.
+
+First we noticed in the contamination score plot (Figure `r fig_ref("Contamination_plot_PC3")`)
+that shows a high contamination score but a low p-value. The sample is within the
+contamination red area, however it is just above the threshold in the *Y-axis* and
+with a high yet moderate contamination score. As this sample (IPA0748) is within 
+the red area, it is automatically tagged as **contaminated**.
+
+```{r 024, echo=FALSE, results='asis'}
+insert.fig.toggle(
+  fig.id = "Contamination_Plot_PC3",
+  button.label = paste0("Figure ", fig_ref("Contamination_plot_PC3")),
+  img.src = "fig/024_Contamination_Plot_PC3.png",
+  fig.width = "95%",
+  fig.cap = "A sample flagged as contaminated but with a low p-value. The sample (IPA0748) p-value is just above the threshold in the Y-axis and with a high but moderate contamination score."
+)
+
+```
+
+<br>
+
+Then we looked to the *VAF plot* (Figure `r fig_ref("VAF_plot_PC3")`) and we observed 
+a high *LOH* in many regions of the genome. *LOH* in this case is seen as a shift
+of the *VAF* of many variants in the genome, from the expected 0.5 (central band
+of variants) to a value close to 0.8 or 0.2 (no band). This is a clear signal of
+*LOH* in many regions of the genome.
+
+```{r 025, echo=FALSE, results='asis'}
+insert.fig.toggle(
+  fig.id = "VAF_Plot_PC3",
+  button.label = paste0("Figure ", fig_ref("VAF_plot_PC3")),
+  img.src = "fig/025_VAF_PC3.png",
+  fig.width = "95%",
+  fig.cap = "The VAF plot shows many regions with loss of heterozygosity (LOH) in many chromosomes, highlighted as a blue rectangles. Notice the separation among the VAF of the variants in the same region (x-axis) as the rectangles."
 )
 
 ```
@@ -313,13 +391,13 @@ discussion and pay attention to many factors to agree in the final inclusion cri
 <br>
 
 In this case, a *RAD54L* variant (chromosome 1) was tagged as *exclude* in the
-*Class judgement* column and assigned to the class *GL_P* (germline proximity; Figure 6).
+*Class judgement* column and assigned to the class *GL_P* (germline proximity; Figure `r fig_ref("QC_table_IE1")`).
 
 The tag *GL_P* (germline proximity) is assigned when the VAF of this variant differs
 from the VAF of other nearby known germline variants. In this case, this variant
-is annotated as a *germline population variant* (Figure 6).
+is annotated as a *germline population variant* (Figure `r fig_ref("QC_table_IE1")`).
 
-We can see the VAF of the proximal variants in the VAF plot (Figure 7). Although proximal
+We can see the VAF of the proximal variants in the VAF plot (Figure `r fig_ref("VAF_IE1")`). Although proximal
 in the genome, their VAF differs.
 
 <br>
@@ -334,11 +412,9 @@ in the genome, their VAF differs.
 **Sample**: *IPA0662*
 
 ```{r 006, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "QC_table_IE1",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("QC_table_IE1")),
   img.src = "fig/006_QC_table_IE1.jpeg",
   fig.width = "95%",
   fig.cap = "QC table with the details (VAF, frequency, sequency depth) associated to the RAD54L variant and tagged as *exclude* and *GL_P*."
@@ -349,11 +425,9 @@ insert.fig.toggle(
 <br>
 
 ```{r 007, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "VAF_IE1",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("VAF_IE1")),
   img.src = "fig/007_VAF_IE1.jpeg",
   fig.width = "95%",
   fig.cap = "VAF plot for case IE1. The RAD54L variant tagged as GL_P is pointed with a red arrow (VAF = 0.36). Note the different VAF value in the nearby area in the chromosome 1 (blue box)."
@@ -370,23 +444,21 @@ insert.fig.toggle(
 <br>
 
 In this case we have two variants in the same exon and very close to each other.
-Both variants are included in the variant list (Figure 8), however most of the
+Both variants are included in the variant list (Figure `r fig_ref("two_variants_closeby")`), however most of the
 times when two variants are very close to each other, this is likely an artifact
 from the the variant caller or during the alignment and only one variant should be
 kept. The recommendation is to keep the variant that makes the most sense.
 
 Here we have one variant that is a large deletion of 18 base pair while the other
-is a mutation right after the deletion (Figure 9). This is probably one variant
+is a mutation right after the deletion (Figure `r fig_ref("VAF_two_variants_closeby_IGV")`). This is probably one variant
 detected as two different variants. We kept here the large deletion and excluded
 the single nucleotide variant. When excluding the second variant we wrote a comment
 in the *Class judgement* column to explain the reason of this decision.
 
 ```{r 017, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "two_variants_closeby",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("two_variants_closeby")),
   img.src = "fig/017_two_variants_closeby.png",
   fig.width = "80%",
   fig.cap = "In the variant list we can see the two variants on the same exon and coordinate show that they are close to each other."
@@ -397,11 +469,9 @@ insert.fig.toggle(
 <br>
 
 ```{r 018, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "VAF_two_variants_closeby_IGV",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("VAF_two_variants_closeby_IGV")),
   img.src = "fig/018_two_variants_closeby_IGV.png",
   fig.width = "75%",
   fig.cap = "On IGV we can actually see that they are the same variant detected as two different variants."
@@ -430,22 +500,20 @@ accounted in the large deletion.
 <br>
 
 In this case we have again two *SETD2* variants in the same exon and very close
-to each other. Both variants are included in the variant list (Figure 10). As we
+to each other. Both variants are included in the variant list (Figure `r fig_ref("two_variants_closeby_nointersection")`). As we
 discussed in *IE2*, this may be an artifact from the the variant caller or during
 the alignment and only one variant should be kept. However in this case the biology
 suggest something different.
 
 Here we have one single nucleotide variant and a few nucleotides upstream we have
-a 4 nucleotide insertion. Note that both variants do not overlap (Figure 11) and
+a 4 nucleotide insertion. Note that both variants do not overlap (Figure `r fig_ref("two_variants_closeby_nointersection_IGV")`) and
 all reads in that area hace both the SNV and the insertion, therefore are co-ocurring
 events.
 
 ```{r 019, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "two_variants_closeby_nointersection",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("two_variants_closeby_nointersection")),
   img.src = "fig/019_two_nonverlap_variants_IE3.png",
   fig.width = "80%",
   fig.cap = "Two *SETD2* variants (a SNV and an insertion), non overlapping and separated by a few nucleotides."
@@ -456,11 +524,9 @@ insert.fig.toggle(
 <br>
 
 ```{r 020, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "two_variants_closeby_nointersection_IGV",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("two_variants_closeby_nointersection_IGV")),
   img.src = "fig/020_two_nonoverlapping_variants_IGV_IE3.png",
   fig.width = "55%",
   fig.cap = "We can see that each read has both the SNV and the insertion, we explain this as a same mutational event but annotated separately."
@@ -515,17 +581,15 @@ Technical:
 <br>
 
 In this particular example, the variant has a low VAF (0.094) and the tumor content
-is 40% (Figure 12). We observed that the variant *A>T* is observed in DNA reads,
-but in none of the RNA reads (Figure 13).
+is 40% (Figure `r fig_ref("Variant_not_seen_RNA")`). We observed that the variant *A>T* is observed in DNA reads,
+but in none of the RNA reads (Figure `r fig_ref("Variant_in_DNA_reads_nut_not_RNA_reads")`).
 
 
 
 ```{r 021, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "Variant_not_seen_RNA",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("Variant_not_seen_RNA")),
   img.src = "fig/021_Variant_IE4.png",
   fig.width = "100%",
   fig.cap = "VAF and tumor content for a variant observed in DNA reads but not in RNA reads."
@@ -536,11 +600,9 @@ insert.fig.toggle(
 <br>
 
 ```{r 022, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "Variant_in_DNA_reads_nut_not_RNA_reads",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("Variant_in_DNA_reads_nut_not_RNA_reads")),
   img.src = "fig/022_DNA_RNA_reads_IE4.png",
   fig.width = "35%",
   fig.cap = "The DNA reads (upper panel) contain the *A>T* variant, however we do not observe any read with this variant in the RNA reads (lowe panel)."
@@ -580,7 +642,7 @@ section we list those common variants and the explanation of its exclusion.
 
 This variant appears frequently in the samples, independently of the cancer
 type. It is likely an alignment artifact although it is also tagged as a
-*recurrent germline* (Figure 14).
+*recurrent germline* (Figure `r fig_ref("BARD2")`).
 
 <br>
 
@@ -595,11 +657,9 @@ samples.
 **Sample**: *IPA0657*
 
 ```{r 008, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "BARD2",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("BARD2")),
   img.src = "fig/008_RV1.jpeg",
   fig.width = "95%",
   fig.cap = "BARD1 variant recurrently found in InPreD samples, it is tagged as a recurrent germline variant which is a criterion to exclude it."
@@ -627,14 +687,12 @@ inferred sex is different, etc).
 
 In this case we have data from a **male** patient, however the predicted sex in
 PureCN has two outcomes: **coverage predicts a male** and **VCF is annotated as a female sample**
-(Figure 15).
+(Figure `r fig_ref("sex_discord_cov_vcf")`).
 
 ```{r 009, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "sex_discord_cov_vcf",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("sex_discord_cov_vcf")),
   img.src = "fig/009_sex_discordance_DC1.jpeg",
   fig.width = "95%",
   fig.cap = "In this sample the sex predicted by PureCN differs from the metadata. According to the coverage is a male, and in the VCF is annotated as a female."
@@ -644,7 +702,7 @@ insert.fig.toggle(
 
 <br>
 
-We checked the VCF plot and verify that is indeed a male patient (Figure 15), we
+We checked the VCF plot and verify that is indeed a male patient (Figure `r fig_ref("male_VAF_X_chrom")`), we
 see that all the germline variants have a *VAF = 1*, which is expected for males, since they
 have only 1 X chromosome (therefore no heterocigocity).
 
@@ -653,11 +711,9 @@ Note that only *1-22* and *X* chromosomes are displayed in the plots. However ch
 
 
 ```{r 010, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "male_VAF_X_chrom",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("male_VAF_X_chrom")),
   img.src = "fig/010_VAF_plot_DC1.jpeg",
   fig.width = "95%",
   fig.cap = "The VAF of germline variants in chromosme X is close to 1. Reflecting the homocigocity in this region because males only have one copy of X chromosome."
@@ -668,15 +724,13 @@ insert.fig.toggle(
 <br>
 
 We must also check the *VCF* result. PureCN calculates a *sex score* (0 for females and
-0.5 for males). This score can differ (as in this case; Figure 16) when there is a chromosome Y
+0.5 for males). This score can differ (as in this case; Figure `r fig_ref("PureCN_sex_score")`) when there is a chromosome Y
 loss, commonly observed in many tumors.
 
 ```{r 011, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "PureCN_sex_score",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("PureCN_sex_score")),
   img.src = "fig/011_sex_score_DC1.png",
   fig.width = "75%",
   fig.cap = "Example of *sex score* calculated by PureCN. File: ${sample_id}_merged_CNV_data.tsv within a TSOPPI RUN_ID folder."
@@ -710,14 +764,12 @@ in this sample, lowering the *sex score* and creating this warning message.
 <br>
 
 In this case the DNA/RNA conconcordance = 0.77, quite close to the suggested threshold
-(>= 0.8), Figure 17. 
+(>= 0.8), Figure `r fig_ref("DNA_RNA_concordance")`. 
 
 ```{r 012, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "DNA_RNA_concordance",
-  button.label =  paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("DNA_RNA_concordance")),
   img.src = "fig/012_disc_table_DC2.png",
   fig.width = "75%",
   fig.cap = "Here the *DNA/RNA concordance* was found to be below the threshold."
@@ -737,14 +789,12 @@ When this happens we have to verify different results:
 - **MAD coverage value** (TSO500_run_metrics.pdf): The *MAD CNV coverage* is above
 the threshold (0.21) in this sample. This suggests that many regions in the genome
 are amplified or deleted, more than what it is usually expected, suggesting a high
-degree of genomic aberration (Figure 18).
+degree of genomic aberration (Figure `r fig_ref("MAD_coverage_DC2")`).
 
 ```{r 013, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "MAD_coverage_DC2",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("MAD_coverage_DC2")),
   img.src = "fig/013_MAD_coverage_DC2.png",
   fig.width = "75%",
   fig.cap = "Here the *MAD CNV coverage* was found to be above threshold which show that some regions have lower or higher CNV than expected. This could be explained by chromosome aberrations."
@@ -760,14 +810,12 @@ is lost, the VAF of variants in this region will be close to 1 or 0 (instead of 
 However because the sample is a mix of normal and tumor sample then the VAF will
 never be 0 or 1 but a slightly lower than 1 or higher than 0. This is why we observe
 in the chromosome with loss of heterozygosity a VAF close to 0.8 or 0.2 instead
-of 0.5 (Figure 19).
+of 0.5 (Figure `r fig_ref("VAF_plot_DC2")`).
 
 ```{r 014, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "VAF_plot_DC2",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("VAF_plot_DC2")),
   img.src = "fig/014_VAF_plot_DC2.png",
   fig.width = "75%",
   fig.cap = "The VAF plots shows a mild loss of heterozygosity in some chromosomes (e.g.: 1, 2, 3, 6, 9, 10, 13, 17, 18). ")
@@ -777,14 +825,12 @@ insert.fig.toggle(
 <br>
 
 - **CNV plot** (CNV_overview_plot.pdf): The CNV plot shows the loss of copies
-in some chromosomes and gain of copies in other chromosomes (Figure 20).
+in some chromosomes and gain of copies in other chromosomes (Figure `r fig_ref("CNV_plot_DC2")`).
 
 ```{r 015, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "CNV_plot_DC2",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("CNV_plot_DC2")),
   img.src = "fig/015_CNV_plot_DC2.png",
   fig.width = "75%",
   fig.cap = "The CNV plot shows the copy number variations across different chromosomes."
@@ -803,7 +849,7 @@ To do so start IGV without initializing a session and in IGV, go to **File → L
 Also load:
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaMarkDuplicates/${sample_id}/${sample_id}.bam`
 
-In Figure 21 we can see a large difference in coverage range between these two tracks
+In Figure `r fig_ref("IGV_RNA_tracks_DC2")` we can see a large difference in coverage range between these two tracks
 *RnaAlignment* and *RnAMarkDuplicates*. This large difference indicate a large amount
 of duplicates which may indicate a low quality of the RNA sample. This could explain
 the low DNA/RNA concordance in this sample.
@@ -811,11 +857,9 @@ the low DNA/RNA concordance in this sample.
 <br>
 
 ```{r 016, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "IGV_RNA_tracks_DC2",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("IGV_RNA_tracks_DC2")),
   img.src = "fig/016_IGV_RNA_tracks_DC2.jpeg",
   fig.width = "75%",
   fig.cap = "The IGV tracks show the coverage range of the RNA alignments and RNA mark duplicates BAM files."
@@ -857,7 +901,7 @@ the predicted variant, makes more sense to be reported.
 <br>
 
 In this case we have a reported 3 nucleotide insertion, however we see in the alignment
-that the 3rd position is a SNV *T>C*, and it is not reported by the predictor (Figure 23).
+that the 3rd position is a SNV *T>C*, and it is not reported by the predictor (Figure `r fig_ref("insert_alignment_CV1")`).
 
 Looking at the insertion sequence, we noticed that it is flanked by two *AGC* sequences,
 if we consider the SNV in the third position, we observe 3 *ACG* repeats. The *VAF*
@@ -867,11 +911,9 @@ the aligner is confused and assign that as a deletion.
 However, the *T>C* is not in the list of reported variants.
 
 ```{r 023, echo=FALSE, results='asis'}
-fig.nb <- fig.nb + 1
-
 insert.fig.toggle(
   fig.id = "insert_alignment_CV1",
-  button.label = paste0("Figure ", fig.nb),
+  button.label = paste0("Figure ", fig_ref("insert_alignment_CV1")),
   img.src = "fig/023_Alignment_CV1.png",
   fig.width = "95%",
   fig.cap = "*TSOPPI* reports a 3 nucleotides insertion in a few reads, in the third position of this insertion there is a C>T variant in all reads. Note the *AGC* flanks around the insertion, if we consider that the C>T variant is present in all the reads, then we have 3 contiguous *ACG* repeats. We suspect this created uncertainty in the aligner."
