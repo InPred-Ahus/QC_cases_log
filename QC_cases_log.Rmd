@@ -367,6 +367,18 @@ insert.fig.toggle(
 
 <br>
 
+**Explanation**: the *contamination* tag in this sample is explained by the high
+*LOH* along the genome affecting the VAF of many variants.
+
+<br>
+
+**Solution**: we inform the interpreters that this sample is not a contamination
+event but a high degree of *LOH*.
+
+**Sample**: *IPA0748*
+
+<br>
+
 <br>
 
 ## IE: Include/Exclude variants
