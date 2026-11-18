@@ -54,7 +54,9 @@ fig_ids <- c(
   "VAF_plot_DC2",                           # DC2: Figure 22
   "CNV_plot_DC2",                           # DC2: Figure 23
   "IGV_RNA_tracks_DC2",                     # DC2: Figure 24
-  "insert_alignment_CV1"                    # CV1: Figure 25
+  "CV_above_th_DC3",                        # DC3: Figure 25
+  "Low_RNA_depth_DC3",                      # DC3: Figure 26
+  "insert_alignment_CV1"                    # CV1: Figure 27
 )
 
 # Returns the figure number for a given ID.
@@ -771,7 +773,7 @@ in this sample, lowering the *sex score* and creating this warning message.
 
 <br>
 
-### DC2: DNA/RNA concordance below the 0.8 threshold
+### DC2: DNA/RNA concordance below the 0.8 threshold due to copy number variants
 
 <br>
 
@@ -862,7 +864,7 @@ Also load:
 `TSO500_analyses/${RUN_ID}/Logs_intermediates/RnaMarkDuplicates/${sample_id}/${sample_id}.bam`
 
 In Figure `r fig_ref("IGV_RNA_tracks_DC2")` we can see a large difference in coverage range between these two tracks
-*RnaAlignment* and *RnAMarkDuplicates*. This large difference indicate a large amount
+*RnaAlignment* and *RnaMarkDuplicates*. This large difference indicate a large amount
 of duplicates which may indicate a low quality of the RNA sample. This could explain
 the low DNA/RNA concordance in this sample.
 
@@ -893,6 +895,73 @@ so the data is still usable.
 <br>
 
 **Sample**: *IPA0660*
+
+
+<br>
+
+<br>
+
+### DC3: DNA/RNA concordance below the 0.8 threshold due to low RNA quality
+
+<br>
+
+In this case the DNA/RNA conconcordance = 0.78, again, quite close to the suggested
+threshold (>= 0.8). But in this case the reason of the discordance is due to another
+reason as those shown in **DC2**.
+
+In this case the *MAD coverage* score is within the normal range, however when we 
+observe the RNA QC metrics the **Coefficient of variation (CV) for genes at median coverage >500**
+is high, above the thresholds (Figure `r fig_ref("insert_alignment_CV1")`).
+
+This *CV* metric can be interpreted as a measurement of the variation of base coverage
+across transcriots with high coverage. Low values correspond to uniform distribution
+of reads, that means, reads are homogenously distributed along the transcripts. High
+values suggest that the reads are unequally distributed in a small proportion of regions.
+
+
+```{r CV_above_th_DC3, echo=FALSE, results='asis'}
+insert.fig.toggle(
+  fig.id = "CV_above_th_DC3",
+  button.label = paste0("Figure ", fig_ref("CV_above_th_DC3")),
+  img.src = "fig/026_CV_above_th_DC3.png",
+  fig.width = "55%",
+  fig.cap = "Coefficient of variation (CV) for genes at median coverage >500 is above the threshold"
+)
+
+```
+
+<br>
+
+When we obserbe the *RNA depth* of the variants before QC, we noticed that the Depth
+values are low (under 100) for all variants. This low depth may explain the DNA-RNA
+discordance reported for this sample.
+
+```{r Low_RNA_depth_DC3, echo=FALSE, results='asis'}
+insert.fig.toggle(
+  fig.id = "Low_RNA_depth_DC3",
+  button.label = paste0("Figure ", fig_ref("Low_RNA_depth_DC3")),
+  img.src = "fig/027_Low_RNA_depth_DC3.png",
+  fig.width = "35%",
+  fig.cap = "Low RNA depth values (3rd columns) in the sample. Use as reference the DNA depth column (1st column). The rows are sorted the the RNA depth values, the mex valus is below 100, indicating a generalized low RNa depth."
+)
+
+```
+
+<br>
+
+**Explanation**: Here the low DNA/RNA concordance is likely explained by a low RNA
+depth in the sample. The *CV* indicates that RNA reads are not uniformly distributed
+and likely concentrated in a few regions, whilst the vast majority of regions have low
+depth.
+
+<br>
+
+**Solution**: we report this to the interpreters. Depending in the DNA variants,
+it may require to repeat the RNa sequencing.
+
+<br>
+
+**Sample**: *IPA0787*
 
 <br>
 
